@@ -15,6 +15,7 @@ MongoClient.connect(connectionString, {tls: true })
 
     app.use(body_parser.urlencoded({ extended: true}))
 
+    //Get Contacts
     app.get('/contacts', (req, res) => {
       db.collection('contacts')
         .find()
@@ -28,6 +29,7 @@ MongoClient.connect(connectionString, {tls: true })
         });
     })
 
+    //Get Contacts by Id
     app.post('/contacts/:id', (req, res) => {
       const contactId = req.params._id
       console.log(contactId)
@@ -45,6 +47,7 @@ MongoClient.connect(connectionString, {tls: true })
       });
     })
 
+    //Create Contact
     app.post('/contacts', (req, res) => {
       const newContact = req.body;
 

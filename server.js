@@ -20,8 +20,8 @@ MongoClient.connect(connectionString, {tls: true })
       db.collection('contacts')
         .find()
         .toArray()
-        .then(quotes => {
-          res.json(quotes);
+        .then(contacts => {
+          res.json(contacts);
         })
         .catch(error => {
           console.error(error);

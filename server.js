@@ -59,14 +59,51 @@ MongoClient.connect(connectionString, {tls: true })
         });
     });
 
-    //Update
-   /*  app.put('/quotes', (req, res) => {
-      collection.findOneAndUpdate(
-        { name: 'Yoda'},
-      )
-    }) */
+    //Update contacts
+    app.put('/contacts/:id', (req, res) => {
+      const contactId = req.params.id;
+      const updatedContact = req.body;
 
-    
+      if (!ObjectId.isValid(contactId)) {
+        return res.status(400).json({ error: 'Invalid ID format' });
+      }
+
+      db.collection('contacts')
+        .updateOne({ _id: new ObjectId(contactId) }, { $set: updatedContact })
+        .then(result => {
+          if (result.modifiedCount === 0) {
+            return res.status(404).json({ error: 'Contact not found' });
+          }
+          res.json({ message: 'Contact updated successfully' });
+        })
+        .catch(error => {
+          console.error(error);
+          res.status(500).json({ error: 'Internal Server Error' });
+        });
+    });
+
+    //Delete contacts
+    app.delete('/contacts/:id', (req, res) => {
+      const contactId = req.params.id;
+
+      if (!ObjectId.isValid(contactId)) {
+        return res.status(400).json({ error: 'Invalid ID format' });
+      }
+
+      db.collection('contacts')
+        .deleteOne({ _id: new ObjectId(contactId) })
+        .then(result => {
+          if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Contacts not found' });
+          }
+          res.json({ message: 'Contacts deleted successfully' });
+        })
+        .catch(error => {
+          console.error(error);
+          res.status(500).json({ error: 'Internal Server Error' });
+        });
+    });
+
     app.listen(3000, function () {
       console.log('listening on 3000')
     })
